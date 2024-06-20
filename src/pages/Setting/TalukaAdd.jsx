@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Modal,
@@ -10,9 +10,34 @@ import {
   Col,
   Button,
 } from "reactstrap";
+import Select from "react-select";
+import Auth from "../AuthUser";
+
 
 const TalukaAdd = ({ closeModal }) => {
   const [talukaName,setTalukaName]=useState("");
+  const [states, setStates] = useState([]);
+  const [selectedState, setSelectedState] = useState(null); // State to hold the selected state
+  const handleStateChange = (selectedOption) => {
+    setSelectedState(selectedOption);
+  };
+  const { http } = Auth();
+
+
+  const fetchStates = () => {
+    http
+      .get(`state/list`)
+      .then((response) => {
+        setStates(response.data);
+      })
+      .catch((error) => {
+        console.error("Error Fetching State Data:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchStates();
+  }, []);
 
   const talukaChange=(e)=>{
     setTalukaName(e.target.value);
@@ -34,7 +59,40 @@ const TalukaAdd = ({ closeModal }) => {
       >
         <ModalHeader className="bg-light p-3">Create Taluka</ModalHeader>
         <ModalBody className="border card-border-success p-3 shadow-lg card">
-          <Row>
+        <Row>
+            <Col className="mb-3">
+              <Label htmlFor="state-field" className="form-label">
+                State
+                <span style={{ color: "red" }}> *</span>
+              </Label>
+              <Select
+                value={selectedState}
+                onChange={handleStateChange}
+                options={states.map((state) => ({
+                  label: state.state_name,
+                  value: state.state_id,
+                }))}
+                className="basic"
+                placeholder="Select State"
+              />
+            </Col>
+            <Col className="mb-3">
+              <Label htmlFor="state-field" className="form-label">
+                State
+                <span style={{ color: "red" }}> *</span>
+              </Label>
+              <Select
+                value={selectedState}
+                onChange={handleStateChange}
+                options={states.map((state) => ({
+                  label: state.state_name,
+                  value: state.state_id,
+                }))}
+                className="basic"
+                placeholder="Select State"
+              />
+            </Col>
+          
             <Col className="mb-3">
               <Label htmlFor="categoryname-field" className="form-label">
               Taluka Name

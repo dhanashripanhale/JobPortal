@@ -68,6 +68,7 @@ const DistrictList = () => {
           <MyModalUpdate
             closeModal={closeModal}
             district={selectedDistrict}
+            fetchDistricts={fetchDistricts}
             updateDistrictList={updateDistrictList}
           />
         )}

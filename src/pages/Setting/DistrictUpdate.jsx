@@ -13,7 +13,7 @@ import {
 import Select from "react-select";
 import Auth from "../AuthUser";
 
-const DistrictUpdate = ({ closeModal, district, updateDistrictList }) => {
+const DistrictUpdate = ({ closeModal, district, updateDistrictList,fetchDistricts }) => {
   const { http } = Auth();
   const [newDistrict, setNewDistrict] = useState({ district_name: "", state_id: null });
   const [errorMessage, setErrorMessage] = useState("");
@@ -73,6 +73,7 @@ const DistrictUpdate = ({ closeModal, district, updateDistrictList }) => {
     try {
       const response = await http.put(`/district/update`, newDistrict);
       updateDistrictList(response.data);
+      fetchDistricts();
       closeModal();
     } catch (error) {
       console.error("Error updating district:", error);
@@ -101,8 +102,7 @@ const DistrictUpdate = ({ closeModal, district, updateDistrictList }) => {
               placeholder="Select State"
             />
           </Col>
-        </Row>
-        <Row>
+       
           <Col className="mb-3">
             <Label htmlFor="districtname-field" className="form-label">
               District Name

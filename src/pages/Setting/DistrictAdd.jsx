@@ -17,7 +17,7 @@ const DistrictAdd = ({ fetchDistricts, closeModal }) => {
   const [states, setStates] = useState([]);
   const [selectedState, setSelectedState] = useState(null); // State to hold the selected state
   const [districtName, setDistrictName] = useState(""); // State to hold the district name
-
+  const { http } = Auth();
   const handleStateChange = (selectedOption) => {
     setSelectedState(selectedOption);
   };
@@ -37,7 +37,7 @@ const DistrictAdd = ({ fetchDistricts, closeModal }) => {
     fetchStates();
   }, []);
 
-  const { http } = Auth();
+ 
 
   const addDistrict = () => {
     if (!selectedState || !districtName) {
