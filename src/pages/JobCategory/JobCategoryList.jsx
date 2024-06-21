@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-// import MyModal from "./TalukaAdd";
 
 import {
   Card,
@@ -11,12 +10,22 @@ import {
   Row,
 } from "reactstrap";
 import Auth from "../AuthUser";
-// import MyModalUpdate from "./TalukaUpdate";
+import MyModal from "./JobCategoryAdd";
+import MyModalUpdate from "./JobCategoryUpdate"
 
 const JobCategoryList = () => {
   const { http } = Auth();
   const [jobCategory, setJobCategory] = useState([]);
+  const [modalJobCategoryUpdate, setModalJobCategoryUpdate] = useState(false);
+  const [selectedJobCategory, setSelectedJobCategory] = useState(null);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const closeModal = () => {
+    setShowModal(false);
+    setModalJobCategoryUpdate(false);
+    setSelectedJobCategory(null);
+  };
+
 
   const fetchJobCategory = async () => {
     try {
@@ -33,18 +42,39 @@ const JobCategoryList = () => {
   }, []);
 
 
+  
+  const deleteJobCategory = (jobCategoryId) => {
+    http.delete(`jobcategory/delete/${jobCategoryId}`)
+      .then(() => {
+        setJobCategory(prevJobCategory => prevJobCategory.filter(jobcategory => jobcategory.jobcategory_id !== jobCategoryId));
+      })
+      .catch((error) => {
+        console.error("Error deleting State:", error);
+      });
+  };
+
+
+  const updateJobCategoryList = (updatedJobCategory) => {
+    setJobCategory(prevJobCategory =>
+      prevJobCategory.map(jobCategory =>
+        jobCategory.jobCategory_id === updatedJobCategory.jobCategory_id ? updatedJobCategory : jobCategory
+      )
+    );
+  };
+
   return (
     <div className="page-content">
       <Container fluid>
-        {/* {showModal && <MyModal closeModal={closeModal} fetchTaluka={fetchTaluka} />}
-        {modalTalukaUpdate && (
+        {showModal && <MyModal closeModal={closeModal} fetchTaluka={fetchJobCategory} />}
+
+        {modalJobCategoryUpdate && (
           <MyModalUpdate
             closeModal={closeModal}
-            taluka={selectedTaluka}
-            fetchTaluka={fetchTaluka}
-            updateTalukaList={updateTalukaList}
+            jobCategory={selectedJobCategory}
+            fetchJobCategory={fetchJobCategory}
+            updateJobCategoryList={updateJobCategoryList}
           />
-        )} */}
+        )}
 
         <Row>
           <Col lg={12}>
@@ -64,7 +94,7 @@ const JobCategoryList = () => {
                       type="button"
                       className="btn btn-success add-btn"
                       id="create-btn"
-                      // onClick={() => setShowModal(true)}
+                      onClick={() => setShowModal(true)}
                     >
                       <i className="ri-add-line align-bottom me-1"></i> Add
                       Category
@@ -97,15 +127,15 @@ const JobCategoryList = () => {
                           <li className="list-inline-item edit">
                             <button className="text-primary d-inline-block edit-item-btn border-0 bg-transparent"
                             onClick={() => {
-                                  // setSelectedTaluka(taluka);
-                                  // setModalTalukaUpdate(true);
+                                  setSelectedJobCategory(jobCategory);
+                                  setModalJobCategoryUpdate(true);
                                 }}>
                               <i className="ri-pencil-fill fs-16" />
                             </button>
                           </li>
                           <li className="list-inline-item">
                             <button className="text-danger d-inline-block remove-item-btn  border-0 bg-transparent"
-                                // onClick={() => deleteTaluka(taluka.taluka_id)}
+                                onClick={() => deleteJobCategory(jobcategory.jobcategory_id)}
                                 >
                               <i className="ri-delete-bin-5-fill fs-16" />
                             </button>
