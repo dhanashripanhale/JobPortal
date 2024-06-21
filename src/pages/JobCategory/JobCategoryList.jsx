@@ -10,10 +10,29 @@ import {
   CardHeader,
   Row,
 } from "reactstrap";
-// import Auth from "../AuthUser";
+import Auth from "../AuthUser";
 // import MyModalUpdate from "./TalukaUpdate";
 
 const JobCategoryList = () => {
+  const { http } = Auth();
+  const [jobCategory, setJobCategory] = useState([]);
+  const [error, setError] = useState(null);
+
+  const fetchJobCategory = async () => {
+    try {
+      const response = await http.get("/jobcategory/list");
+      setJobCategory(response.data);
+    } catch (error) {
+      console.error("Error fetching Job Category data:", error);
+      setError(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobCategory();
+  }, []);
+
+
   return (
     <div className="page-content">
       <Container fluid>
@@ -67,13 +86,11 @@ const JobCategoryList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                  {/* {taluka.map((taluka, index) => ( */}
-                      {/* <tr key={index}>
+                  {jobCategory.map((jobcategory, index) => ( 
+                       <tr key={index}>
                         <td>{index + 1}</td>
-                        <td>{taluka.taluka_name}</td> */}
-<td></td>
-<td></td>
-                
+                        <td>{jobcategory.jobcategory_name}</td>
+      
 
                       <td>
                         <ul className="list-inline hstack gap-2 mb-0">
@@ -95,8 +112,8 @@ const JobCategoryList = () => {
                           </li>
                         </ul>
                       </td>
-                    {/* </tr> */}
-                  {/* ))} */}
+                    </tr> 
+                   ))}
                   </tbody>
                 </table>
               </CardBody>
@@ -108,4 +125,4 @@ const JobCategoryList = () => {
   )
 }
 
-export default JobCategoryList
+export default JobCategoryList;
