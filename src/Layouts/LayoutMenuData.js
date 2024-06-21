@@ -168,7 +168,7 @@ const Navdata = () => {
       id: "jobCategory",
       label: "Job Category",
       icon: "mdi mdi-speedometer",
-      link: "/jobCat-list",
+      link: "/jobcategory-list",
       stateVariables: isJobCategory,
       click: function (e) {
         e.preventDefault();

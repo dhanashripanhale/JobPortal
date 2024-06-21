@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Modal,
@@ -10,19 +10,63 @@ import {
   Col,
   Button,
 } from "reactstrap";
+import Select from "react-select";
+import Auth from "../AuthUser";
 
-const VillageAdd = ({ closeModal }) => {
+
+const VillageAdd = ({ closeModal, fetchVillage }) => {
   const [villageName,setVillageName]=useState("");
+  const [taluka, setTaluka] = useState([]);
+  const [selectedTaluka, setSelectedTaluka] = useState(null); // State to hold the selected state
+  
+  const handleTalukaChange = (selectedOption) => {
+    setSelectedTaluka(selectedOption);
+  };
+  const { http } = Auth();
 
-  const villageChange=(e)=>{
-    setVillageName(e.target.value);
-  }
 
-  const handleSubmit=(e)=>{
-    e.preventDefault();
-    console.log("Village name:",villageName);
-    setVillageName("");
-  }
+  const fetchTaluka = () => {
+    http
+      .get(`taluka/list`)
+      .then((response) => {
+        setTaluka(response.data);
+      })
+      .catch((error) => {
+        console.error("Error Fetching Taluka Data:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchTaluka();
+  }, []);
+
+ 
+
+
+  
+
+  const addVillage = () => {
+    if (!selectedTaluka || !villageName) {
+      console.error("Taluka and Village Name are required.");
+      return;
+    }
+
+    const villageData = {
+      village_name: villageName,
+      village_taluka: selectedTaluka.value,
+    };
+
+    http
+      .post("/village/store", villageData)
+      .then((response) => {
+        console.log("Village added successfully:", response.data);
+        fetchVillage();
+        closeModal();
+      })
+      .catch((error) => {
+        console.error("Error adding Village:", error);
+      });
+  };
   return (
     <div className="page-content">
     
@@ -32,21 +76,42 @@ const VillageAdd = ({ closeModal }) => {
         isOpen={true}
         size="l"
       >
-        <ModalHeader className="bg-light p-3">Create Village</ModalHeader>
+        <ModalHeader className="bg-light p-3">Create Taluka</ModalHeader>
         <ModalBody className="border card-border-success p-3 shadow-lg card">
-          <Row>
+        <Row>
+            
+            <Col className="mb-3">
+              <Label htmlFor="state-field" className="form-label">
+                District
+                <span style={{ color: "red" }}> *</span>
+              </Label>
+              <Select
+                value={selectedTaluka}
+                onChange={handleTalukaChange}
+                options={taluka.map((taluka) => ({
+                  label: taluka.taluka_name,
+                  value: taluka.taluka_id,
+                }))}
+                className="basic"
+                placeholder="Select State"
+              />
+            </Col>
+          
             <Col className="mb-3">
               <Label htmlFor="categoryname-field" className="form-label">
-              Village Name
+              Taluka Name
                 <span style={{ color: "red" }}> *</span>
               </Label>
               <Input
-                name="village"
-                id="village"
+                name=" village"
+                id=" village"
                 className="form-control"
                 placeholder="Village Name"
                 type="text"
-                onChange={villageChange}
+                value={villageName}
+                onChange={(e) => setVillageName(e.target.value)}
+
+                // onChange={talukaChange}
               />
             </Col>
           </Row>
@@ -55,7 +120,7 @@ const VillageAdd = ({ closeModal }) => {
           <Col lg={6}></Col>
 
             <Col style={{ marginTop: "28px" }}>
-              <Button onClick={handleSubmit} color="primary"> <i className="ri-save-3-line align-bottom me-1" /> Save</Button>
+              <Button onClick={addVillage} color="primary"> <i className="ri-save-3-line align-bottom me-1" /> Add</Button>
               <Button
                 onClick={closeModal}
                 color="danger"

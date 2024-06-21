@@ -44,6 +44,9 @@ import StateList from "../pages/Setting/StateList";
 import DistrictList from "../pages/Setting/DistrictList";
 import TalukaList from "../pages/Setting/TalukaList";
 import VillageList from "../pages/Setting/VillageList";
+import JobCategoryList from "../pages/JobCategory/JobCategoryList";
+
+
 const authProtectedRoutes = [
   { path: "/dashboard", component: <DashboardEcommerce /> },
   { path: "/pos-list", component: <POSList /> },
@@ -80,6 +83,9 @@ const authProtectedRoutes = [
   { path: "/district-list", component: <DistrictList/>} ,
   { path: "/taluka-list", component: <TalukaList/>} ,
   { path: "/village-list", component: <VillageList/>} ,
+
+  { path: "/jobcategory-list", component: <JobCategoryList/>} ,
+
 ];
 
 const publicRoutes = [

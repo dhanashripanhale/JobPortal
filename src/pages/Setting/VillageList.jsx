@@ -11,11 +11,19 @@ import {
   Row,
 } from "reactstrap";
 import Auth from "../AuthUser";
+import MyModalUpdate from "./VillageUpdate"
+
 
 
 const VillageList = () => {
+
   const [showModal, setShowModal] = useState(false);
-  const closeModal = () => setShowModal(false);
+  const closeModal = () => {
+    setShowModal(false);
+    setModalVillageUpdate(false);
+  };
+  const [modalVillageUpdate, setModalVillageUpdate] = useState(false);
+  const [selectedVillage, setSelectedVillage] = useState(null);
 
   const { http } = Auth();
   const [village, setVillage] = useState([]);
@@ -36,10 +44,42 @@ useEffect(() => {
   fetchVillage();
 }, []);
 
+const updateVillageList = (updatedVillage) => {
+  setVillage((prevvillage) =>
+    prevvillage.map((village) =>
+      village.villag_id === updatedVillage.village_id
+        ? updatedVillage
+        : village
+    )
+  );
+};
+
+
+const deleteVillage = async (villageId) => {
+  try {
+    await http.delete(`/village/delete/${villageId}`);
+    setVillage((prevvillage) =>
+      prevvillage.filter((village) => village.village_id !== villageId)
+    );
+  } catch (error) {
+    console.error("Error deleting Village:", error);
+  }
+};
+
   return (
     <div className="page-content">
       <Container fluid>
-        {showModal && <MyModal closeModal={closeModal} />}
+        {/* {showModal && <MyModal closeModal={closeModal} />} */}
+        {showModal && <MyModal closeModal={closeModal} fetchVillage={fetchVillage} />}
+        {modalVillageUpdate && (
+          <MyModalUpdate
+            closeModal={closeModal}
+            village={selectedVillage}
+            fetchVillage={fetchVillage}
+            updateVillageList={updateVillageList}
+
+          />
+        )}
 
         <Row>
           <Col lg={12}>
@@ -91,12 +131,18 @@ useEffect(() => {
                       <td>
                         <ul className="list-inline hstack gap-2 mb-0">
                           <li className="list-inline-item edit">
-                            <button className="text-primary d-inline-block edit-item-btn border-0 bg-transparent">
+                            <button className="text-primary d-inline-block edit-item-btn border-0 bg-transparent"
+                              onClick={() => {
+                                  setSelectedVillage(village);
+                                  setModalVillageUpdate(true);
+                                }}>
                               <i className="ri-pencil-fill fs-16" />
                             </button>
                           </li>
                           <li className="list-inline-item">
-                            <button className="text-danger d-inline-block remove-item-btn  border-0 bg-transparent">
+                            <button className="text-danger d-inline-block remove-item-btn  border-0 bg-transparent"
+                                onClick={() => deleteVillage(village.village_id)}
+                                >
                               <i className="ri-delete-bin-5-fill fs-16" />
                             </button>
                           </li>
