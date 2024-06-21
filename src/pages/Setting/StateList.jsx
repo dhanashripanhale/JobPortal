@@ -63,12 +63,13 @@ const StateList = () => {
   return (
     <div className="page-content">
       <Container fluid>
-        {showModal && <MyModal closeModal={closeModal} />}
+        {showModal && <MyModal closeModal={closeModal} fetchState={fetchStates} />}
         {modalStatesUpdate && (
   <MyModalUpdate
     closeModal={closeModal}
     state={selectedState}
     updateStateList={updateStateList}
+    fetchState={fetchStates}
   />
 )}
 

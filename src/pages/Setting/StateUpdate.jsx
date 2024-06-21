@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,fetchState } from "react";
 import {
   Modal,
   ModalHeader,
@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import Auth from "../AuthUser";
 
-const StateUpdate = ({ state, updateStateList, closeModal }) => {
+const StateUpdate = ({ state, updateStateList, closeModal,fetchState }) => {
   const { http } = Auth();
   const [newState, setNewState] = useState({ state_id: "", state_name: "" });
   const [errorMessage, setErrorMessage] = useState("");
@@ -39,7 +39,9 @@ const StateUpdate = ({ state, updateStateList, closeModal }) => {
       .then(function (response) {
         console.log(response.data);
         updateStateList(response.data);
+        fetchState();
         closeModal(); // Close the modal on success
+       
       })
       .catch(function (error) {
         console.log(error);
