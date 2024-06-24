@@ -94,9 +94,11 @@ const JobBody = () => {
     setShowModal(true); // Open the modal
   };
 
-  const filteredJobs = selectedDistrict
-    ? job.filter((job) => job.district_name === selectedDistrict.district_name)
-    : job;
+  const filteredJobs = job.filter((job) => {
+    const matchesDistrict = selectedDistrict ? job.district_name === selectedDistrict.district_name : true;
+    const matchesCategory = selectedJobCategory ? job.jobcategory_id === selectedJobCategory.value : true;
+    return matchesDistrict && matchesCategory;
+  });
 
   return (
     <Container>
