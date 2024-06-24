@@ -21,11 +21,19 @@ const JobUpdate = ({ closeModal, job, updateJobList, fetchJob }) => {
     company_name: "",
     job_experience: "",
     job_salary: "",
+    district_id: null,
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [jobCategory, setJobCategory] = useState([]);
   const [selectedJobCategory, setSelectedJobCategory] = useState(null);
   const [uploadLogo, setUploadLogo] = useState(null);
+  const [districts, setDistrict] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+
+  const handleDistrictChange = (selectedOption) => {
+    setSelectedDistrict(selectedOption);
+    setNewJob({ ...newJob, district_id: selectedOption.value });
+  };
 
   const uploadLogoChange = (event) => setUploadLogo(event.target.files[0]);
 
@@ -33,6 +41,21 @@ const JobUpdate = ({ closeModal, job, updateJobList, fetchJob }) => {
     setSelectedJobCategory(selectedOption);
     setNewJob({ ...newJob, jobcategory_id: selectedOption.value });
   };
+
+  const fetchDistrict = () => {
+    http
+      .get(`district/list`)
+      .then((response) => {
+        setDistrict(response.data);
+      })
+      .catch((error) => {
+        console.error("Error Fetching District Data:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchDistrict();
+  }, []);
 
   const fetchJobCategory = () => {
     http
@@ -59,10 +82,15 @@ const JobUpdate = ({ closeModal, job, updateJobList, fetchJob }) => {
         job_experience: job.job_experience,
         job_salary: job.job_salary,
         jobcategory_id: job.jobcategory_id,
+        district_id: job.district_id,
       });
       setSelectedJobCategory({
         label: job.jobcategory_name,
         value: job.jobcategory_id,
+      });
+      setSelectedDistrict({
+        label: job.district_name,
+        value: job.district_id,
       });
     }
   }, [job]);
@@ -73,12 +101,20 @@ const JobUpdate = ({ closeModal, job, updateJobList, fetchJob }) => {
   };
 
   const updateJobHandler = async () => {
-    if (!newJob.job_name.trim() || !newJob.jobcategory_id) {
-      setErrorMessage("Please fill the Job name and select a Job Category.");
+    if (!newJob.job_name.trim() || !newJob.jobcategory_id || !newJob.district_id) {
+      setErrorMessage("Please fill all required fields.");
       return;
     }
     try {
-      const response = await http.put(`/job/update`, newJob);
+      const formData = new FormData();
+      Object.keys(newJob).forEach(key => {
+        formData.append(key, newJob[key]);
+      });
+      if (uploadLogo) {
+        formData.append("company_logo", uploadLogo);
+      }
+
+      const response = await http.put(`/job/update`, formData);
       updateJobList(response.data);
       fetchJob();
       closeModal();
@@ -90,6 +126,7 @@ const JobUpdate = ({ closeModal, job, updateJobList, fetchJob }) => {
 
   return (
     <Modal className="rounded shadow" centered isOpen={true} size="lg">
+     
       <ModalHeader className="bg-light p-3">Update Job</ModalHeader>
       <ModalBody className="border card-border-success p-3 shadow-lg card">
         <Row>
@@ -166,6 +203,24 @@ const JobUpdate = ({ closeModal, job, updateJobList, fetchJob }) => {
               onChange={uploadLogoChange}
               style={{ display: "block" }}
               id="fileInput"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="mb-3">
+            <Label htmlFor="state-field" className="form-label">
+              District
+              <span style={{ color: "red" }}> *</span>
+            </Label>
+            <Select
+              value={selectedDistrict}
+              onChange={handleDistrictChange}
+              options={districts.map((district) => ({
+                label: district.district_name,
+                value: district.district_id,
+              }))}
+              className="basic"
+              placeholder="Select State"
             />
           </Col>
         </Row>

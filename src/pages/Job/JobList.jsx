@@ -112,6 +112,7 @@ const JobList = () => {
                         <td>{job.company_name}</td>
                         <td>{job.job_experience}</td>
                         <td>{job.job_salary}</td>
+                        <td>{job.district_name}</td>
                         <td>
                           <ul className="list-inline hstack gap-2 mb-0">
                             <li className="list-inline-item edit">

@@ -21,7 +21,11 @@ const JobAdd = ({ fetchJob, closeModal }) => {
   const [companyName,setCompnayName] = useState("");
   const [experience,setExperience] = useState("");
   const [salary,setSalary] = useState("");
-
+  const [districts, setDistrict] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState(null); // State to hold the selected state
+  const handleDistrictChange = (selectedOption) => {
+    setSelectedDistrict(selectedOption);
+  };
   const { http } = Auth();
   const handleJobCategoryChange = (selectedOption) => {
     setSelectedJobCategory(selectedOption);
@@ -30,6 +34,21 @@ const JobAdd = ({ fetchJob, closeModal }) => {
 
   const uploadLogoChange = (event) => setUploadLogo(event.target.files[0]);
 
+
+  const fetchDistrict = () => {
+    http
+      .get(`district/list`)
+      .then((response) => {
+        setDistrict(response.data);
+      })
+      .catch((error) => {
+        console.error("Error Fetching District Data:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchDistrict();
+  }, []);
 
   const fetchJobCategory = () => {
     http
@@ -49,7 +68,7 @@ const JobAdd = ({ fetchJob, closeModal }) => {
  
 
   const addJob = () => {
-    if (!selectedJobCategory || !jobName) {
+    if (!selectedJobCategory || !jobName ||!selectedDistrict) {
       console.error("Job Category  and Job Name are required.");
       return;
     }
@@ -61,6 +80,7 @@ const JobAdd = ({ fetchJob, closeModal }) => {
       job_des:jobDes,
       job_experience:experience,
       job_salary:salary,
+      job_district: selectedDistrict.value,
 
     };
 
@@ -157,6 +177,24 @@ const JobAdd = ({ fetchJob, closeModal }) => {
                   id="fileInput"
               />
             </Col>
+            <Row>
+            <Col className="mb-3">
+              <Label htmlFor="state-field" className="form-label">
+                District
+                <span style={{ color: "red" }}> *</span>
+              </Label>
+              <Select
+                value={selectedDistrict}
+                onChange={handleDistrictChange}
+                options={districts.map((district) => ({
+                  label: district.district_name,
+                  value: district.district_id,
+                }))}
+                className="basic"
+                placeholder="Select State"
+              />
+            </Col>
+            </Row>
             
             
           </Row>
