@@ -1,4 +1,4 @@
-import React, { useState, useEffect,fetchState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   ModalHeader,
@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import Auth from "../AuthUser";
 
-const JobCategoryUpdate = ({ jobCategory, updateJobCategoryList, closeModal,fetchJobCategory }) => {
+const JobCategoryUpdate = ({ jobCategory, updateJobCategoryList, closeModal, fetchJobCategory }) => {
   const { http } = Auth();
   const [newJobCategory, setNewJobCategory] = useState({ jobcategory_id: "", jobcategory_name: "" });
   const [errorMessage, setErrorMessage] = useState("");
@@ -25,7 +25,7 @@ const JobCategoryUpdate = ({ jobCategory, updateJobCategoryList, closeModal,fetc
     }
   }, [jobCategory]);
 
-  const stateUpdateHandler = (e) => {
+  const jobCategoryUpdateHandler = (e) => {
     setErrorMessage("");
     setNewJobCategory({ ...newJobCategory, jobcategory_name: e.target.value });
   };
@@ -37,15 +37,12 @@ const JobCategoryUpdate = ({ jobCategory, updateJobCategoryList, closeModal,fetc
     }
     http.put(`/jobcategory/update`, newJobCategory)
       .then(function (response) {
-        console.log(response.data);
         updateJobCategoryList(response.data);
         fetchJobCategory();
         closeModal(); // Close the modal on success
-       
       })
       .catch(function (error) {
-        console.log(error);
-        setErrorMessage("Failed to update Job Category. Please try again."); // Improved error handling
+        setErrorMessage("Failed to update Job Category. Please try again.");
       });
   };
 
@@ -65,7 +62,7 @@ const JobCategoryUpdate = ({ jobCategory, updateJobCategoryList, closeModal,fetc
                 className="form-control"
                 type="text"
                 value={newJobCategory.jobcategory_name}
-                onChange={stateUpdateHandler}
+                onChange={jobCategoryUpdateHandler}
               />
             </Col>
           </Row>
@@ -93,5 +90,4 @@ const JobCategoryUpdate = ({ jobCategory, updateJobCategoryList, closeModal,fetc
   );
 };
 
-export default JobCategoryUpdate ;
-
+export default JobCategoryUpdate;

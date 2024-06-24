@@ -45,6 +45,9 @@ import DistrictList from "../pages/Setting/DistrictList";
 import TalukaList from "../pages/Setting/TalukaList";
 import VillageList from "../pages/Setting/VillageList";
 import JobCategoryList from "../pages/JobCategory/JobCategoryList";
+import JobList from "../pages/Job/JobList";
+import JobAppList from "../pages/JobApplication/JobAppList";
+import JobPortal from "../JobPortal/JobPortal";
 
 
 const authProtectedRoutes = [
@@ -85,6 +88,8 @@ const authProtectedRoutes = [
   { path: "/village-list", component: <VillageList/>} ,
 
   { path: "/jobcategory-list", component: <JobCategoryList/>} ,
+  { path: "/job-list", component: <JobList/>} ,
+  { path: "/jobApp-list", component: <JobAppList/>} ,
 
 ];
 
@@ -92,6 +97,7 @@ const publicRoutes = [
   // Authentication Page
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
+  { path: "/job-portal", component: <JobPortal/> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
   { path: "/register", component: <Register /> },
   //AuthenticationInner pages

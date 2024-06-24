@@ -164,32 +164,6 @@ const Navdata = () => {
         updateIconSidebar(e);
       },
     },
-     {
-      id: "jobCategory",
-      label: "Job Category",
-      icon: "mdi mdi-speedometer",
-      link: "/jobcategory-list",
-      stateVariables: isJobCategory,
-      click: function (e) {
-        e.preventDefault();
-        setIsJobCategory(!isJobCategory);
-        setIscurrentState("JobCat");
-        updateIconSidebar(e);
-      },
-    },
-    {
-      id: "employee",
-      label: "Employee",
-      icon: "mdi mdi-speedometer",
-      link: "/employee-list",
-      stateVariables: isEmployee,
-      click: function (e) {
-        e.preventDefault();
-        setIsEmployee(!isEmployee);
-        setIscurrentState("Employee");
-        updateIconSidebar(e);
-      },
-    },
     {
       id: "job",
       label: "Job",
@@ -203,6 +177,35 @@ const Navdata = () => {
         updateIconSidebar(e);
       },
     },
+    {
+      id: "jobCategory",
+      label: "Job Category",
+      icon: "mdi mdi-speedometer",
+      link: "/jobcategory-list",
+      stateVariables: isJobCategory,
+      click: function (e) {
+        e.preventDefault();
+        setIsJobCategory(!isJobCategory);
+        setIscurrentState("JobCat");
+        updateIconSidebar(e);
+      },
+    },
+     
+    {
+      id: "employee",
+      label: "Employee",
+      icon: "mdi mdi-speedometer",
+      link: "/employee-list",
+      stateVariables: isEmployee,
+      click: function (e) {
+        e.preventDefault();
+        setIsEmployee(!isEmployee);
+        setIscurrentState("Employee");
+        updateIconSidebar(e);
+      },
+    },
+    
+   
     {
       id: "blog",
       label: "Blog",

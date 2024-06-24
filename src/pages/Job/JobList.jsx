@@ -1,73 +1,64 @@
 import React, { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  Card,
-  CardBody,
-  Col,
-  Container,
-  CardHeader,
-  Row,
-} from "reactstrap";
+import { Card, CardBody, Col, Container, CardHeader, Row } from "reactstrap";
 import Auth from "../AuthUser";
-import MyModal from "./JobCategoryAdd";
-import MyModalUpdate from "./JobCategoryUpdate";
+import MyModal from "./JobAdd";
+import MyModalUpdate from "./JobUpdate";
 
-const JobCategoryList = () => {
+const JobList = () => {
   const { http } = Auth();
-  const [jobCategory, setJobCategory] = useState([]);
-  const [modalJobCategoryUpdate, setModalJobCategoryUpdate] = useState(false);
-  const [selectedJobCategory, setSelectedJobCategory] = useState(null);
+  const [job, setJob] = useState([]);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [modalJobUpdate, setModalJobUpdate] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+
   const closeModal = () => {
     setShowModal(false);
-    setModalJobCategoryUpdate(false);
-    setSelectedJobCategory(null);
+    setModalJobUpdate(false);
+    setSelectedJob(null);
   };
 
-  const fetchJobCategory = async () => {
+  const updateJobList = (updatedJob) => {
+    setJob((prevJob) =>
+      prevJob.map((job) => (job.job_id === updatedJob.job_id ? updatedJob : job))
+    );
+  };
+
+  const fetchJob = async () => {
     try {
-      const response = await http.get("/jobcategory/list");
-      setJobCategory(response.data);
+      const response = await http.get("/job/list");
+      setJob(response.data);
     } catch (error) {
-      console.error("Error fetching Job Category data:", error);
+      console.error("Error fetching Job data:", error);
       setError(error.message);
     }
   };
 
   useEffect(() => {
-    fetchJobCategory();
+    fetchJob();
   }, []);
 
-  const deleteJobCategory = (jobCategoryId) => {
-    http.delete(`jobcategory/delete/${jobCategoryId}`)
+  const deleteJob = (jobId) => {
+    http.delete(`job/delete/${jobId}`)
       .then(() => {
-        setJobCategory(prevJobCategory => prevJobCategory.filter(jobcategory => jobcategory.jobcategory_id !== jobCategoryId));
+        setJob((prevJob) => prevJob.filter((job) => job.job_id !== jobId));
       })
       .catch((error) => {
-        console.error("Error deleting Job category:", error);
+        console.error("Error deleting Job:", error);
       });
-  };
-
-  const updateJobCategoryList = (updatedJobCategory) => {
-    setJobCategory(prevJobCategory =>
-      prevJobCategory.map(jobCategory =>
-        jobCategory.jobcategory_id === updatedJobCategory.jobcategory_id ? updatedJobCategory : jobCategory
-      )
-    );
   };
 
   return (
     <div className="page-content">
       <Container fluid>
-        {showModal && <MyModal closeModal={closeModal} fetchJobCategory={fetchJobCategory} />}
-
-        {modalJobCategoryUpdate && (
+        {showModal && <MyModal closeModal={closeModal} fetchJob={fetchJob} />}
+        {modalJobUpdate && (
           <MyModalUpdate
             closeModal={closeModal}
-            jobCategory={selectedJobCategory}
-            fetchJobCategory={fetchJobCategory}
-            updateJobCategoryList={updateJobCategoryList}
+            job={selectedJob}
+            fetchJob={fetchJob}
+            updateJobList={updateJobList}
           />
         )}
 
@@ -77,7 +68,7 @@ const JobCategoryList = () => {
               <CardHeader className="card-header border-0">
                 <Row className="align-items-center gy-3">
                   <div className="col-sm">
-                    <h5 className="card-title mb-0">Job Category List</h5>
+                    <h5 className="card-title mb-0">Job List</h5>
                   </div>
                   <div className="col-sm-auto">
                     <button
@@ -87,8 +78,7 @@ const JobCategoryList = () => {
                       id="create-btn"
                       onClick={() => setShowModal(true)}
                     >
-                      <i className="ri-add-line align-bottom me-1"></i> Add
-                      Category
+                      <i className="ri-add-line align-bottom me-1"></i> Add Job
                     </button>
                   </div>
                 </Row>
@@ -102,23 +92,34 @@ const JobCategoryList = () => {
                   <thead className="table-light text-muted text-uppercase">
                     <tr>
                       <th>#</th>
-                      <th>JOB CATEGORY</th>
+                      <th>JOB TITLE</th>
+                      <th>CATEGORY</th>
+                      <th>COMPANY LOGO</th>
+                      <th>COMPANY NAME</th>
+                      <th>EXPERIENCE</th>
+                      <th>SALARY</th>
+                      <th>Location</th>
                       <th>ACTION</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {jobCategory.map((jobcategory, index) => (
+                    {job.map((job, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
-                        <td>{jobcategory.jobcategory_name}</td>
+                        <td>{job.job_name}</td>
+                        <td>{job.jobcategory_name}</td>
+                        <td></td>
+                        <td>{job.company_name}</td>
+                        <td>{job.job_experience}</td>
+                        <td>{job.job_salary}</td>
                         <td>
                           <ul className="list-inline hstack gap-2 mb-0">
                             <li className="list-inline-item edit">
                               <button
                                 className="text-primary d-inline-block edit-item-btn border-0 bg-transparent"
                                 onClick={() => {
-                                  setSelectedJobCategory(jobcategory);
-                                  setModalJobCategoryUpdate(true);
+                                  setSelectedJob(job);
+                                  setModalJobUpdate(true);
                                 }}
                               >
                                 <i className="ri-pencil-fill fs-16" />
@@ -126,8 +127,8 @@ const JobCategoryList = () => {
                             </li>
                             <li className="list-inline-item">
                               <button
-                                className="text-danger d-inline-block remove-item-btn  border-0 bg-transparent"
-                                onClick={() => deleteJobCategory(jobcategory.jobcategory_id)}
+                                className="text-danger d-inline-block remove-item-btn border-0 bg-transparent"
+                                onClick={() => deleteJob(job.job_id)}
                               >
                                 <i className="ri-delete-bin-5-fill fs-16" />
                               </button>
@@ -147,4 +148,4 @@ const JobCategoryList = () => {
   );
 };
 
-export default JobCategoryList;
+export default JobList;
