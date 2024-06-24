@@ -21,6 +21,7 @@ const JobAdd = ({ fetchJob, closeModal }) => {
   const [companyName,setCompnayName] = useState("");
   const [experience,setExperience] = useState("");
   const [salary,setSalary] = useState("");
+  const [jobType,setJobType] = useState("");
   const [districts, setDistrict] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState(null); // State to hold the selected state
   const handleDistrictChange = (selectedOption) => {
@@ -80,6 +81,7 @@ const JobAdd = ({ fetchJob, closeModal }) => {
       job_des:jobDes,
       job_experience:experience,
       job_salary:salary,
+      job_type:jobType,
       job_district: selectedDistrict.value,
 
     };
@@ -225,6 +227,20 @@ const JobAdd = ({ fetchJob, closeModal }) => {
                 type="text"
                 value={salary}
                 onChange={(e) => setSalary(e.target.value)}
+              />
+            </Col>
+            <Col className="mb-6">
+              <Label htmlFor="districtname-field" className="form-label">
+               Job-Type
+                <span style={{ color: "red" }}> *</span>
+              </Label>
+              <Input
+                name="jobtype"
+                className="form-control"
+                placeholder="Job-Type "
+                type="text"
+                value={jobType}
+                onChange={(e) => setJobType(e.target.value)}
               />
             </Col>
             </Row>
