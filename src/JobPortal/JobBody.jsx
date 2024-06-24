@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 // import { useTheme } from "@material-ui/core/styles";
 
 const JobBody = () => {
-    
   const theme = useTheme(); // Get the current theme
   const [jobCategory, setJobCategory] = useState([]);
   const [selectedJobCategory, setSelectedJobCategory] = useState(null);
@@ -19,9 +18,18 @@ const JobBody = () => {
   const [error, setError] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null); // State to store the selected job
   const [districts, setDistricts] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState(null); // State to store the selected district
 
   const handleJobCategoryChange = (selectedOption) => {
     setSelectedJobCategory(selectedOption);
+  };
+
+  const handleDistrictClick = (district) => {
+    if (district === "All") {
+      setSelectedDistrict(null);
+    } else {
+      setSelectedDistrict(district);
+    }
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -78,7 +86,6 @@ const JobBody = () => {
 
   useEffect(() => {
     fetchJobCategory();
-
     fetchJob();
   }, []); // Fetch data on component mount
 
@@ -86,6 +93,10 @@ const JobBody = () => {
     setSelectedJob(job); // Set the selected job when "MORE DETAILS" button is clicked
     setShowModal(true); // Open the modal
   };
+
+  const filteredJobs = selectedDistrict
+    ? job.filter((job) => job.district_name === selectedDistrict.district_name)
+    : job;
 
   return (
     <Container>
@@ -146,10 +157,20 @@ const JobBody = () => {
               </Label>
               <table>
                 <tbody>
+                  <tr onClick={() => handleDistrictClick("All")} style={{ cursor: "pointer" }}>
+                    <td>
+                      <LocationOnIcon
+                        style={{
+                          color: theme.palette.primary.main,
+                          fontSize: 18,
+                        }}
+                      />
+                    </td>
+                    <td>All</td>
+                  </tr>
                   {districts.map((district, index) => (
-                    <tr key={index}>
+                    <tr key={index} onClick={() => handleDistrictClick(district)} style={{ cursor: "pointer" }}>
                       <td>
-                    
                         <LocationOnIcon
                           style={{
                             color: theme.palette.primary.main,
@@ -166,7 +187,7 @@ const JobBody = () => {
           </Row>
         </Col>
         <Col xs="8">
-          {job.map((job) => (
+          {filteredJobs.map((job) => (
             <div
               key={job.job_id}
               className="card w-75"
@@ -193,15 +214,14 @@ const JobBody = () => {
                 </h5>
                 <h6
                   className="card-text"
-                  style={{ marginTop: "-10px", color: "2F4F4F", fontSize: 14 }}
+                  style={{ marginTop: "-7px", color: "2F4F4F", fontSize: 14 }}
                 >
-                  {job.company_name}
+                  {job.company_name} | {job.jobcategory_name}
                 </h6>
                 <h6
                   className="card-text"
-                  style={{ marginTop: "-5px", color: "2F4F4F", fontSize: 12 }}
+                  style={{ marginTop: "-2px", color: "2F4F4F", fontSize: 12 }}
                 >
-                  
                   {job.job_type} | {job.job_experience}
                 </h6>
                 <p className="card-text">{job.job_des}</p>
