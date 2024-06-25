@@ -13,11 +13,17 @@ import {
 } from 'reactstrap';
 import logo from './images/jobportal.jpg'; // Replace with the path to your logo
 import SearchIcon from '@mui/icons-material/Search';
+import MyModal from "./Register";
+
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
+  const [showModal, setShowModal] = useState(false);
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -30,6 +36,9 @@ const Header = () => {
       <NavbarBrand href="#home">
         Job Portal
       </NavbarBrand>
+      {showModal && (
+        <MyModal  closeModal={closeModal} />
+      )}
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <div className="d-flex w-100 justify-content-between align-items-center">
@@ -55,7 +64,9 @@ const Header = () => {
           </Nav>
 
           <div className="ml-auto">
-            <Button color="light" outline className="mr-2">Register</Button>
+            <Button color="light" outline className="mr-2"
+               onClick={() => setShowModal(true)}
+            >Register</Button>
             <Button color="light" outline>Login</Button>
           </div>
         </div>

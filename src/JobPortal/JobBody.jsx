@@ -105,6 +105,7 @@ const JobBody = () => {
       {showModal && (
         <MyModal selectedJob={selectedJob} closeModal={closeModal} />
       )}
+     
       <Row>
         <Col>
           <Row>

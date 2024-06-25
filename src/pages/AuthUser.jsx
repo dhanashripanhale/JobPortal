@@ -8,9 +8,18 @@ const Auth = () => {
             "Content-Type": "application/json"
         }
     });
+    const https = axios.create({
+        baseURL: "http://localhost:8080/api",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });   
     return {
         http,
-    };
+        https
+    };  
+   
 };
 
 export default Auth
+

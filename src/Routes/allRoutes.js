@@ -63,6 +63,7 @@ const authProtectedRoutes = [
     component: <Navigate to="/dashboard" />,
   },
   { path: "*", component: <Navigate to="/dashboard" /> },
+ 
 
   // Tax Routes Starts
   { path: "/tax-list", component: <TaxView /> },

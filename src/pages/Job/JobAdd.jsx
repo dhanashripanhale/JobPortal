@@ -27,7 +27,7 @@ const JobAdd = ({ fetchJob, closeModal }) => {
   const handleDistrictChange = (selectedOption) => {
     setSelectedDistrict(selectedOption);
   };
-  const { http } = Auth();
+  const { http,https } = Auth();
   const handleJobCategoryChange = (selectedOption) => {
     setSelectedJobCategory(selectedOption);
   };
@@ -35,7 +35,7 @@ const JobAdd = ({ fetchJob, closeModal }) => {
 
   const uploadLogoChange = (event) => setUploadLogo(event.target.files[0]);
 
-
+console.log(uploadLogo);
   const fetchDistrict = () => {
     http
       .get(`district/list`)
@@ -69,32 +69,35 @@ const JobAdd = ({ fetchJob, closeModal }) => {
  
 
   const addJob = () => {
-    if (!selectedJobCategory || !jobName ||!selectedDistrict) {
-      console.error("Job Category  and Job Name are required.");
+    if (!selectedJobCategory || !jobName || !selectedDistrict) {
+      console.error("Job Category, Job Name, and District are required.");
       return;
     }
 
-    const JobData = {
-      job_name: jobName,
-      job_jobcategory: selectedJobCategory.value,
-      company_name: companyName,
-      job_des:jobDes,
-      job_experience:experience,
-      job_salary:salary,
-      job_type:jobType,
-      job_district: selectedDistrict.value,
+    const jobData = new FormData();
+    jobData.append('job_name', jobName);
+    jobData.append('job_jobcategory', selectedJobCategory.value);
+    jobData.append('company_name', companyName);
+    jobData.append('company_logo', uploadLogo); // File data
+    jobData.append('job_des', jobDes);
+    jobData.append('job_experience', experience);
+    jobData.append('job_salary', salary);
+    jobData.append('job_type', jobType);
+    jobData.append('job_district', selectedDistrict.value);
 
-    };
-
-    http
-      .post("/job/store", JobData)
+    https
+      .post('/job/store', jobData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
       .then((response) => {
-        console.log("Job added successfully:", response.data);
+        console.log('Job added successfully:', response.data);
         fetchJob();
         closeModal();
       })
       .catch((error) => {
-        console.error("Error adding Job:", error);
+        console.error('Error adding Job:', error);
       });
   };
 
