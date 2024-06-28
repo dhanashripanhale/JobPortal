@@ -48,6 +48,8 @@ import JobCategoryList from "../pages/JobCategory/JobCategoryList";
 import JobList from "../pages/Job/JobList";
 import JobAppList from "../pages/JobApplication/JobAppList";
 import JobPortal from "../JobPortal/JobPortal";
+import JobPortalLogin from "../Login/JobPortalLogin";
+import JobPortalHome from "../JobPortal/JobPortalHome";
 
 
 const authProtectedRoutes = [
@@ -92,6 +94,8 @@ const authProtectedRoutes = [
   { path: "/job-list", component: <JobList/>} ,
   { path: "/jobApp-list", component: <JobAppList/>} ,
 
+
+
 ];
 
 const publicRoutes = [
@@ -99,6 +103,8 @@ const publicRoutes = [
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
   { path: "/job-portal", component: <JobPortal/> },
+  { path: "/job-portal-home", component: <JobPortalHome/> },
+  { path: "/jobportal-login", component: <JobPortalLogin/> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
   { path: "/register", component: <Register /> },
   //AuthenticationInner pages

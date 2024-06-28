@@ -5,6 +5,7 @@ import Auth from "../AuthUser";
 import MyModal from "./JobAdd";
 import MyModalUpdate from "./JobUpdate";
 
+
 const JobList = () => {
   const { http } = Auth();
   const [job, setJob] = useState([]);
@@ -12,6 +13,7 @@ const JobList = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalJobUpdate, setModalJobUpdate] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const IMG_url = "http://localhost:8080/api";
 
   const closeModal = () => {
     setShowModal(false);
@@ -108,7 +110,16 @@ const JobList = () => {
                         <td>{index + 1}</td>
                         <td>{job.job_name}</td>
                         <td>{job.jobcategory_name}</td>
-                        <td></td>
+                        <td>
+                        <img
+                            src={`${IMG_url}/public/images/company_logo/${job.company_logo}`}
+                            alt=""
+                            height="100px" 
+                        width="100px"
+                          />
+                        </td>
+                       
+                        
                         <td>{job.company_name}</td>
                         <td>{job.job_experience}</td>
                         <td>{job.job_salary}</td>

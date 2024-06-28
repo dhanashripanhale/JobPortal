@@ -79,6 +79,7 @@ const JobUpdate = ({ closeModal, job, updateJobList, fetchJob }) => {
         job_name: job.job_name,
         job_des: job.job_des,
         company_name: job.company_name,
+        company_logo: uploadLogo,
         job_experience: job.job_experience,
         job_salary: job.job_salary,
         jobcategory_id: job.jobcategory_id,

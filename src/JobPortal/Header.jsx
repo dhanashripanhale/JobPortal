@@ -14,6 +14,7 @@ import {
 import logo from './images/jobportal.jpg'; // Replace with the path to your logo
 import SearchIcon from '@mui/icons-material/Search';
 import MyModal from "./Register";
+import { Link } from 'react-router-dom';
 
 
 const Header = () => {
@@ -64,10 +65,13 @@ const Header = () => {
           </Nav>
 
           <div className="ml-auto">
-            <Button color="light" outline className="mr-2"
+            {/* <Button color="light" outline className="mr-2"
                onClick={() => setShowModal(true)}
-            >Register</Button>
+            >Register</Button> */}
+            <h5 style={{ color: "#ffffff" }}>Already Register ?  <Link to="/dashboard">
             <Button color="light" outline>Login</Button>
+            </Link> Here</h5>
+           
           </div>
         </div>
       </Collapse>
